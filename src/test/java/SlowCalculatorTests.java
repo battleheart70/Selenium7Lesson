@@ -85,7 +85,7 @@ class SlowCalculatorTests {
   @DisplayName("Ввод нескольких операторов подряд")
   void multipleOperatorsInput(){
     openSlowCalculatorPage();
-    pressButtons("2+-x÷3=");
+    pressButtons("2+-÷x3=");
     waitAndAssertResult("6", "Результат неверный!");
   }
   @Test
