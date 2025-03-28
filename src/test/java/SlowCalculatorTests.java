@@ -73,7 +73,7 @@ class SlowCalculatorTests {
     waitAndAssertResult("", "Кнопка 'C' не очистила поле ввода");
   }
 
-  private void pressButtons(String expression) {
+  private void pressButtons(String expression) {//5 4 5 4+53234
     for (char ch : expression.toCharArray()) {
       String buttonXPath = "//span[normalize-space()='" + ch + "']";
       driver.findElement(By.xpath(buttonXPath)).click();
