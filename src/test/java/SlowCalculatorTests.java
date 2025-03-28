@@ -43,7 +43,7 @@ class SlowCalculatorTests {
   void testExpressionWithAllOperations() {
     openSlowCalculatorPage();
     pressButtons("4.0x2.5÷1.25+3.2-1.7=");
-    waitAndAssertResult("9.5", "Неверный расчет!"); // Ожидаемый результат
+    waitAndAssertResult("9.5", "Неверный расчет!");
   }
 
   @Test
@@ -73,7 +73,7 @@ class SlowCalculatorTests {
     waitAndAssertResult("", "Кнопка 'C' не очистила поле ввода");
   }
 
-  private void pressButtons(String expression) {//5 4 5 4+53234
+  private void pressButtons(String expression) {
     for (char ch : expression.toCharArray()) {
       String buttonXPath = "//span[normalize-space()='" + ch + "']";
       driver.findElement(By.xpath(buttonXPath)).click();
