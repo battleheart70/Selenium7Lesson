@@ -1,0 +1,6 @@
+expression,expectedResult
+7+8=,15
+9-4=,5
+6x3=,18
+8÷4=,2
+5÷0=,Infinity
