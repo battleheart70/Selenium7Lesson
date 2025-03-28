@@ -75,7 +75,7 @@ class SlowCalculatorTests {
 
   @Test
   @DisplayName("Ввод нескольких '.' подряд игнорируется")
-  void multipleDotsInput(){
+  void multipleDotsInput() {
     openSlowCalculatorPage();
     pressButtons("1....2+3....4=");
     waitAndAssertResult("4.6", "Результат неверный!");
@@ -83,14 +83,15 @@ class SlowCalculatorTests {
 
   @Test
   @DisplayName("Ввод нескольких операторов подряд")
-  void multipleOperatorsInput(){
+  void multipleOperatorsInput() {
     openSlowCalculatorPage();
     pressButtons("2+-÷x3=");
     waitAndAssertResult("6", "Результат неверный!");
   }
+
   @Test
   @DisplayName("Отрицательные числа")
-  void negativeNumbersTest(){
+  void negativeNumbersTest() {
     openSlowCalculatorPage();
     pressButtons("-3-6=");
     waitAndAssertResult("-9", "Результат неверный!");
