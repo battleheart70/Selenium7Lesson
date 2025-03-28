@@ -73,6 +73,29 @@ class SlowCalculatorTests {
     waitAndAssertResult("", "Кнопка 'C' не очистила поле ввода");
   }
 
+  @Test
+  @DisplayName("Ввод нескольких '.' подряд игнорируется")
+  void multipleDotsInput(){
+    openSlowCalculatorPage();
+    pressButtons("1....2+3....4=");
+    waitAndAssertResult("4.6", "Результат неверный!");
+  }
+
+  @Test
+  @DisplayName("Ввод нескольких операторов подряд")
+  void multipleOperatorsInput(){
+    openSlowCalculatorPage();
+    pressButtons("2+-x÷3=");
+    waitAndAssertResult("6", "Результат неверный!");
+  }
+  @Test
+  @DisplayName("Отрицательные числа")
+  void negativeNumbersTest(){
+    openSlowCalculatorPage();
+    pressButtons("-3-6=");
+    waitAndAssertResult("-9", "Результат неверный!");
+  }
+
   private void pressButtons(String expression) {
     for (char ch : expression.toCharArray()) {
       String buttonXPath = "//span[normalize-space()='" + ch + "']";
