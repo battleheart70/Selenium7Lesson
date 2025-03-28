@@ -3,16 +3,13 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.html5.Storage;
 import org.openqa.selenium.html5.WebStorage;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.example.Constants.*;
 
-import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class WebStorageTests {
   private WebDriver driver;
-  private WebDriverWait wait;
   private WebStorage webStorage;
   private Storage localStorage;
   private Storage sessionStorage;
@@ -20,7 +17,6 @@ class WebStorageTests {
   @BeforeEach
   void prepare() {
     driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(2));
     driver.get(BASE_URL);
     webStorage = (WebStorage) driver;
     localStorage = webStorage.getLocalStorage();
@@ -95,18 +91,18 @@ class WebStorageTests {
   }
 
   private void assertStorageContains(Storage storage, String key, String expectedValue, String storageLocatorId) {
-    assertEquals(expectedValue, storage.getItem(key), "Storage does not contain expected value!");
+    assertEquals(expectedValue, storage.getItem(key), "Хранилище не содержит ожидаемое значение!");
     assertTrue(driver.findElement(By.id(storageLocatorId)).getText().contains("\"" + key + "\":\"" + expectedValue + "\""),
-            storageLocatorId + " does not display on the page!");
+            storageLocatorId + " не отображается на странице!");
   }
 
   private void assertStorageDoesNotContain(Storage storage, String key, String storageLocatorId) {
-    assertNull(storage.getItem(key), "Storage item was not removed!");
-    assertFalse(driver.findElement(By.id(storageLocatorId)).getText().contains(key), storageLocatorId + " still displays on the page!");
+    assertNull(storage.getItem(key), "Элемент хранилища не был удален!");
+    assertFalse(driver.findElement(By.id(storageLocatorId)).getText().contains(key), storageLocatorId + " все еще отображается на странице!");
   }
 
   private void assertStorageIsEmpty(Storage storage, String storageLocatorId) {
-    assertNull(storage.getItem("anyKey"), storageLocatorId + " should not contain items!");
-    assertEquals("{}", driver.findElement(By.id(storageLocatorId)).getText(), storageLocatorId + " should be empty on the page!");
+    assertNull(storage.getItem("anyKey"), storageLocatorId + " не должно содержать элементов!");
+    assertEquals("{}", driver.findElement(By.id(storageLocatorId)).getText(), storageLocatorId + " должно быть пустым на странице!");
   }
 }
