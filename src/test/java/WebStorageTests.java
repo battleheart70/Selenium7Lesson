@@ -3,9 +3,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.html5.Storage;
 import org.openqa.selenium.html5.WebStorage;
+
+
 import static org.example.Constants.*;
-
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class WebStorageTests {
@@ -13,6 +13,12 @@ class WebStorageTests {
   private WebStorage webStorage;
   private Storage localStorage;
   private Storage sessionStorage;
+  private static final String LOCAL_STORAGE_ID = "local-storage";
+  private static final String SESSION_STORAGE_ID = "session-storage";
+  private static final String DEFAULT_SESSION_STORAGE_KEY_1 = "lastname";
+  private static final String DEFAULT_SESSION_STORAGE_VALUE_1 = "Doe";
+  private static final String DEFAULT_SESSION_STORAGE_KEY_2 = "name";
+  private static final String DEFAULT_SESSION_STORAGE_VALUE_2 = "John";
 
   @BeforeEach
   void prepare() {

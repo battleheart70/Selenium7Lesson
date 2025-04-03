@@ -9,11 +9,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.example.Constants.*;
+import static org.example.Constants.BASE_URL;
+import static org.example.Constants.LOREM_IPSUM;
+
 
 class JSAlertsTests {
   private WebDriver driver;
   private WebDriverWait wait;
+  private static final String ALERT_CONFIRM_TEXT = "Is this correct?";
+  private static final String ALERT_HELLO_WORLD_TEXT = "Hello world!";
+  private static final String ALERT_CONFIRM_ACCEPT_TEXT = "You chose: true";
+  private static final String ALERT_CONFIRM_CANCEL_TEXT = "You chose: false";
+  private static final String ALERT_PROMPT_TEXT = "Please enter your name";
+  private static final String PROMPT_TEXT_CONFIRMATION = "You typed: ";
+  private static final String MODAL_TITLE = "Modal title";
+  private static final String MODAL_BODY = "This is the modal body";
+  private static final String MODAL_CONFIRMATION_TEXT = "You chose: ";
+  private static final String MODAL_SAVE_CHANGES = "Save changes";
+  private static final String MODAL_CLOSE = "Close";
 
   @BeforeEach
   void prepare() {

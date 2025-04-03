@@ -7,18 +7,21 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import static org.example.Constants.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static org.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CookiesTests {
   private WebDriver driver;
   private WebDriverWait wait;
+  private static final int DEFAULT_COOKIES_SIZE = 2;
+  private static final Cookie DEFAULT_DATE_COOKIES = new Cookie("date", "10/07/2018");
+  private static final Cookie DEFAULT_USERNAME_COOKIES = new Cookie("username", "John Doe");
 
   @BeforeEach
   void prepare() {
