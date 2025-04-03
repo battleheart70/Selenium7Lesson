@@ -2,6 +2,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+src/test/resources/*.properties
+!/src/test/resources/default.properties
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

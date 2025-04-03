@@ -1,3 +1,5 @@
+import config.TestPropertiesConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,12 +23,14 @@ class CookiesTests {
   private static final int DEFAULT_COOKIES_SIZE = 2;
   private static final Cookie DEFAULT_DATE_COOKIES = new Cookie("date", "10/07/2018");
   private static final Cookie DEFAULT_USERNAME_COOKIES = new Cookie("username", "John Doe");
+  TestPropertiesConfig config =
+      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
 
   @BeforeEach
   void prepare() {
     driver = new ChromeDriver();
     wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-    driver.get(BASE_URL);
+    driver.get(config.getBaseUrl());
   }
 
   @AfterEach
@@ -38,12 +41,14 @@ class CookiesTests {
   @Test
   @DisplayName("Добавление и проверка куки")
   void cookieAddTest() {
+    String testKey = config.getTestKey();
+    String testValue = config.getTestValue();
+    System.out.printf("testKey = %s, testValue = %s", testKey, testValue); // logging
 
     openCookiesPage();
-    driver.manage().addCookie(new Cookie(TEST_KEY, TEST_VALUE));
+    driver.manage().addCookie(new Cookie(testKey, testValue));
     pressRefreshCookiesButton();
-
-    assertCookieExists(TEST_KEY, TEST_VALUE);
+    assertCookieExists(testKey, testValue);
     assertEquals(DEFAULT_COOKIES_SIZE + 1, driver.manage().getCookies().size());
   }
 

@@ -1,3 +1,5 @@
+import config.TestPropertiesConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -9,13 +11,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.example.Constants.BASE_URL;
 import static org.example.Constants.LOREM_IPSUM;
-
 
 class JSAlertsTests {
   private WebDriver driver;
   private WebDriverWait wait;
+  TestPropertiesConfig config =
+      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
+
   private static final String ALERT_CONFIRM_TEXT = "Is this correct?";
   private static final String ALERT_HELLO_WORLD_TEXT = "Hello world!";
   private static final String ALERT_CONFIRM_ACCEPT_TEXT = "You chose: true";
@@ -31,9 +34,8 @@ class JSAlertsTests {
   @BeforeEach
   void prepare() {
     driver = new ChromeDriver();
-    // Устанавливаем implicit wait на 2 секунды
     driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    driver.get(BASE_URL);
+    driver.get(config.getBaseUrl());
     wait = new WebDriverWait(driver, Duration.ofSeconds(5));
   }
 

@@ -1,3 +1,5 @@
+import config.TestPropertiesConfig;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -11,17 +13,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.example.Constants.BASE_URL;
-
 class SlowCalculatorTests {
   private WebDriver driver;
   private WebDriverWait wait;
+  TestPropertiesConfig config =
+      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
 
   @BeforeEach
   void prepare() {
     driver = new ChromeDriver();
     wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-    driver.get(BASE_URL);
+    driver.get(config.getBaseUrl());
   }
 
   @AfterEach
