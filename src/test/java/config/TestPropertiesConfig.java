@@ -16,4 +16,10 @@ public interface TestPropertiesConfig extends Config {
   @Key("testValue")
   @DefaultValue((Constants.TEST_VALUE))
   String getTestValue();
+
+  @Key("username")
+  String getUsername();
+
+  @Key("password")
+  String getPassword();
 }
