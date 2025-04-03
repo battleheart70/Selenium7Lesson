@@ -24,6 +24,7 @@ class IFramesTests {
   void prepare() {
     driver = new ChromeDriver();
     wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+    driver.manage().window().maximize();
     driver.get(config.getBaseUrl());
   }
 

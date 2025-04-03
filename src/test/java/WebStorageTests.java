@@ -62,6 +62,7 @@ class WebStorageTests {
 
   @Test
   @DisplayName("Добавление в LocalStorage и проверка отображения")
+  @Tag("KeyValueTest")
   void addLocalStorageTest() {
     openWebStoragePage();
     localStorage.setItem(testKey, testValue);
@@ -71,6 +72,7 @@ class WebStorageTests {
 
   @Test
   @DisplayName("Удаление из LocalStorage")
+  @Tag("KeyValueTest")
   void removeLocalStorageTest() {
     openWebStoragePage();
     localStorage.setItem(testKey, testValue);
@@ -81,6 +83,7 @@ class WebStorageTests {
 
   @Test
   @DisplayName("Добавление в SessionStorage и проверка отображения")
+  @Tag("KeyValueTest")
   void addSessionStorageTest() {
     openWebStoragePage();
     sessionStorage.setItem(testKey, testValue);
@@ -90,6 +93,7 @@ class WebStorageTests {
 
   @Test
   @DisplayName("Удаление из SessionStorage")
+  @Tag("KeyValueTest")
   void removeSessionStorageTest() {
     openWebStoragePage();
     sessionStorage.setItem(testKey, testValue);

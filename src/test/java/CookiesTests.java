@@ -1,9 +1,6 @@
 import config.TestPropertiesConfig;
 import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
@@ -40,6 +37,7 @@ class CookiesTests {
 
   @Test
   @DisplayName("Добавление и проверка куки")
+  @Tag("KeyValueTest")
   void cookieAddTest() {
     String testKey = config.getTestKey();
     String testValue = config.getTestValue();
