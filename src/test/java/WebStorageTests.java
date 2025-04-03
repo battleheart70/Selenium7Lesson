@@ -60,9 +60,9 @@ class WebStorageTests {
         SESSION_STORAGE_ID);
   }
 
+  @Tag("KeyValueTest")
   @Test
   @DisplayName("Добавление в LocalStorage и проверка отображения")
-  @Tag("KeyValueTest")
   void addLocalStorageTest() {
     openWebStoragePage();
     localStorage.setItem(testKey, testValue);
@@ -70,9 +70,9 @@ class WebStorageTests {
     assertStorageContains(localStorage, testKey, testValue, LOCAL_STORAGE_ID);
   }
 
+  @Tag("KeyValueTest")
   @Test
   @DisplayName("Удаление из LocalStorage")
-  @Tag("KeyValueTest")
   void removeLocalStorageTest() {
     openWebStoragePage();
     localStorage.setItem(testKey, testValue);
@@ -81,9 +81,9 @@ class WebStorageTests {
     assertStorageDoesNotContain(localStorage, testKey, LOCAL_STORAGE_ID);
   }
 
+  @Tag("KeyValueTest")
   @Test
   @DisplayName("Добавление в SessionStorage и проверка отображения")
-  @Tag("KeyValueTest")
   void addSessionStorageTest() {
     openWebStoragePage();
     sessionStorage.setItem(testKey, testValue);
@@ -91,9 +91,9 @@ class WebStorageTests {
     assertStorageContains(sessionStorage, testKey, testValue, SESSION_STORAGE_ID);
   }
 
+  @Tag("KeyValueTest")
   @Test
   @DisplayName("Удаление из SessionStorage")
-  @Tag("KeyValueTest")
   void removeSessionStorageTest() {
     openWebStoragePage();
     sessionStorage.setItem(testKey, testValue);

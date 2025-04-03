@@ -35,9 +35,9 @@ class CookiesTests {
     driver.quit();
   }
 
+  @Tag("KeyValueTest")
   @Test
   @DisplayName("Добавление и проверка куки")
-  @Tag("KeyValueTest")
   void cookieAddTest() {
     String testKey = config.getTestKey();
     String testValue = config.getTestValue();
