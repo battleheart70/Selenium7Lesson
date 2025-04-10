@@ -1,32 +1,12 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+package tests;
 
 import java.time.Duration;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-class LoadingImagesTest {
-  private WebDriver driver;
-  private WebDriverWait wait;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
-
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    driver.get(config.getBaseUrl());
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
+class LoadingImagesTest extends BaseTest{
 
   @Test
   @DisplayName("Открыть страницу и подождать пока все картинки загрузятся")

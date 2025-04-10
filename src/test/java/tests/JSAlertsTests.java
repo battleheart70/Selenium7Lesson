@@ -1,24 +1,14 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+package tests;
 
 import static org.example.Constants.LOREM_IPSUM;
 
-class JSAlertsTests {
-  private WebDriver driver;
-  private WebDriverWait wait;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
+class JSAlertsTests extends BaseTest {
   private static final String ALERT_CONFIRM_TEXT = "Is this correct?";
   private static final String ALERT_HELLO_WORLD_TEXT = "Hello world!";
   private static final String ALERT_CONFIRM_ACCEPT_TEXT = "You chose: true";
@@ -30,19 +20,7 @@ class JSAlertsTests {
   private static final String MODAL_CONFIRMATION_TEXT = "You chose: ";
   private static final String MODAL_SAVE_CHANGES = "Save changes";
   private static final String MODAL_CLOSE = "Close";
-
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    driver.get(config.getBaseUrl());
-    wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
+  
 
   @Test
   @DisplayName("Проверить Alert")

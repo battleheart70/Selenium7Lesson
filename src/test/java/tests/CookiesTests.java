@@ -1,40 +1,21 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class CookiesTests {
-  private WebDriver driver;
-  private WebDriverWait wait;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+class CookiesTests extends BaseTest {
+ 
+  
   private static final int DEFAULT_COOKIES_SIZE = 2;
   private static final Cookie DEFAULT_DATE_COOKIES = new Cookie("date", "10/07/2018");
   private static final Cookie DEFAULT_USERNAME_COOKIES = new Cookie("username", "John Doe");
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
-
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-    driver.get(config.getBaseUrl());
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
-
+  
   @Tag("KeyValueTest")
   @Test
   @DisplayName("Добавление и проверка куки")

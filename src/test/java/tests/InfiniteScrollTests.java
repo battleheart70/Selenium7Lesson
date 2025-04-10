@@ -1,40 +1,16 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+package tests;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
+class InfiniteScrollTests extends BaseTest{
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class InfiniteScrollTests {
-
-  private WebDriver driver;
-  private WebDriverWait wait;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
-
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-    driver.get(config.getBaseUrl());
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
-
+ 
   @Test
   @DisplayName("Проверка бесконечного скролла")
   void infiniteScrollTest() {

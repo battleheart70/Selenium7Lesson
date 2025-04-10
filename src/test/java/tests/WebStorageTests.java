@@ -1,3 +1,5 @@
+package tests;
+
 import config.TestPropertiesConfig;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
@@ -8,13 +10,11 @@ import org.openqa.selenium.html5.WebStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WebStorageTests {
-  private WebDriver driver;
+class WebStorageTests extends BaseTest{
+
   private WebStorage webStorage;
   private Storage localStorage;
   private Storage sessionStorage;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
   String testKey = config.getTestKey();
   String testValue = config.getTestValue();
   private static final String LOCAL_STORAGE_ID = "local-storage";
@@ -24,10 +24,10 @@ class WebStorageTests {
   private static final String DEFAULT_SESSION_STORAGE_KEY_2 = "name";
   private static final String DEFAULT_SESSION_STORAGE_VALUE_2 = "John";
 
+  @Override
   @BeforeEach
   void prepare() {
-    driver = new ChromeDriver();
-    driver.get(config.getBaseUrl());
+    super.prepare();
     webStorage = (WebStorage) driver;
     localStorage = webStorage.getLocalStorage();
     sessionStorage = webStorage.getSessionStorage();
@@ -35,10 +35,6 @@ class WebStorageTests {
     System.out.printf("testKey = %s, testValue = %s%n", testKey, testValue);
   }
 
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
 
   @Test
   @DisplayName("Проверка дефолтных Local&Session storage")

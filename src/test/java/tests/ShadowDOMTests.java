@@ -1,35 +1,14 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+package tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ShadowDOMTests {
-  private WebDriver driver;
-  private WebDriverWait wait;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-    driver.get(config.getBaseUrl());
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
+class ShadowDOMTests extends BaseTest {
 
   @Test
   @DisplayName("Shadow DOM Тест")

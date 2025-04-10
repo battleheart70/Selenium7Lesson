@@ -1,35 +1,15 @@
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
+package tests;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
-class SlowCalculatorTests {
-  private WebDriver driver;
-  private WebDriverWait wait;
-  TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
-
-  @BeforeEach
-  void prepare() {
-    driver = new ChromeDriver();
-    wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-    driver.get(config.getBaseUrl());
-  }
-
-  @AfterEach
-  void cleanUp() {
-    driver.quit();
-  }
+class SlowCalculatorTests extends BaseTest{
+  
 
   @ParameterizedTest
   @DisplayName("Проверить медленный калькулятор с различными операциями")
