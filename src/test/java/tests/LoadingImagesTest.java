@@ -1,33 +1,39 @@
 package tests;
 
-import java.time.Duration;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import static Pages.LoadingImagesPage.*;
 
-class LoadingImagesTest extends BaseTest{
+import Pages.HomePage;
+import Pages.LoadingImagesPage;
+import io.qameta.allure.Epic;
+import org.junit.jupiter.api.*;
+
+@Epic("Loading images tests")
+class LoadingImagesTest extends BaseTest {
+  LoadingImagesPage loadingImagesPage;
+
+  @Override
+  @BeforeEach
+  void prepare() {
+    super.prepare();
+    loadingImagesPage = new HomePage(driver).openLoadingImagesPage();
+  }
 
   @Test
   @DisplayName("Открыть страницу и подождать пока все картинки загрузятся")
   void loadingImagesTest() {
-    driver.findElement(By.linkText("Loading images")).click();
-    wait.pollingEvery(Duration.ofMillis(500))
-        .until(ExpectedConditions.textToBe(By.id("text"), "Done!"));
+    loadingImagesPage.waitForLoadComplete();
 
     Assertions.assertTrue(
-        isCorrectImageLoaded("compass"), "Изображение с id 'compass' не загружено корректно.");
+        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getCompassImage()),
+        "Изображение с id 'compass' не загружено корректно.");
     Assertions.assertTrue(
-        isCorrectImageLoaded("calendar"), "Изображение с id 'calendar' не загружено корректно.");
+        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getCalendarImage()),
+        "Изображение с id 'calendar' не загружено корректно.");
     Assertions.assertTrue(
-        isCorrectImageLoaded("award"), "Изображение с id 'award' не загружено корректно.");
+        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getAwardImage()),
+        "Изображение с id 'award' не загружено корректно.");
     Assertions.assertTrue(
-        isCorrectImageLoaded("landscape"), "Изображение с id 'landscape' не загружено корректно.");
-  }
-
-  private boolean isCorrectImageLoaded(String id) {
-    WebElement image = driver.findElement(By.id(id));
-
-    return image.isDisplayed() && image.getAttribute("src").contains(id);
+        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getLandscapeImage()),
+        "Изображение с id 'landscape' не загружено корректно.");
   }
 }

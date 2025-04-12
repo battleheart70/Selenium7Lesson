@@ -1,138 +1,114 @@
 package tests;
 
-import config.TestPropertiesConfig;
-import org.aeonbits.owner.ConfigFactory;
+import Pages.HomePage;
+import Pages.WebStoragePage;
+import io.qameta.allure.Epic;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.html5.Storage;
-import org.openqa.selenium.html5.WebStorage;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class WebStorageTests extends BaseTest{
+@Epic("Web Storage Tests")
+class WebStorageTests extends BaseTest {
 
-  private WebStorage webStorage;
-  private Storage localStorage;
-  private Storage sessionStorage;
   String testKey = config.getTestKey();
   String testValue = config.getTestValue();
-  private static final String LOCAL_STORAGE_ID = "local-storage";
-  private static final String SESSION_STORAGE_ID = "session-storage";
-  private static final String DEFAULT_SESSION_STORAGE_KEY_1 = "lastname";
-  private static final String DEFAULT_SESSION_STORAGE_VALUE_1 = "Doe";
-  private static final String DEFAULT_SESSION_STORAGE_KEY_2 = "name";
-  private static final String DEFAULT_SESSION_STORAGE_VALUE_2 = "John";
+  private WebStoragePage webStoragePage;
 
   @Override
   @BeforeEach
   void prepare() {
     super.prepare();
-    webStorage = (WebStorage) driver;
-    localStorage = webStorage.getLocalStorage();
-    sessionStorage = webStorage.getSessionStorage();
-
+    HomePage homePage = new HomePage(driver);
+    webStoragePage = homePage.openWebStoragePage();
     System.out.printf("testKey = %s, testValue = %s%n", testKey, testValue);
   }
-
 
   @Test
   @DisplayName("Проверка дефолтных Local&Session storage")
   void checkStorageDefaults() {
-    openWebStoragePage();
-    clickLocalStorageButton();
-    assertStorageIsEmpty(localStorage, LOCAL_STORAGE_ID);
 
-    clickSessionStorageButton();
-    assertStorageContains(
-        sessionStorage,
-        DEFAULT_SESSION_STORAGE_KEY_1,
-        DEFAULT_SESSION_STORAGE_VALUE_1,
-        SESSION_STORAGE_ID);
-    assertStorageContains(
-        sessionStorage,
-        DEFAULT_SESSION_STORAGE_KEY_2,
-        DEFAULT_SESSION_STORAGE_VALUE_2,
-        SESSION_STORAGE_ID);
-  }
+    webStoragePage.clickLocalStorageButton();
+    assertNull(webStoragePage.getLocalStorageItem(testKey), "Local storage должно быть пустым!");
 
-  @Tag("KeyValueTest")
-  @Test
-  @DisplayName("Добавление в LocalStorage и проверка отображения")
-  void addLocalStorageTest() {
-    openWebStoragePage();
-    localStorage.setItem(testKey, testValue);
-    clickLocalStorageButton();
-    assertStorageContains(localStorage, testKey, testValue, LOCAL_STORAGE_ID);
-  }
 
-  @Tag("KeyValueTest")
-  @Test
-  @DisplayName("Удаление из LocalStorage")
-  void removeLocalStorageTest() {
-    openWebStoragePage();
-    localStorage.setItem(testKey, testValue);
-    localStorage.removeItem(testKey);
-    clickLocalStorageButton();
-    assertStorageDoesNotContain(localStorage, testKey, LOCAL_STORAGE_ID);
-  }
-
-  @Tag("KeyValueTest")
-  @Test
-  @DisplayName("Добавление в SessionStorage и проверка отображения")
-  void addSessionStorageTest() {
-    openWebStoragePage();
-    sessionStorage.setItem(testKey, testValue);
-    clickSessionStorageButton();
-    assertStorageContains(sessionStorage, testKey, testValue, SESSION_STORAGE_ID);
-  }
-
-  @Tag("KeyValueTest")
-  @Test
-  @DisplayName("Удаление из SessionStorage")
-  void removeSessionStorageTest() {
-    openWebStoragePage();
-    sessionStorage.setItem(testKey, testValue);
-    sessionStorage.removeItem(testKey);
-    clickSessionStorageButton();
-    assertStorageDoesNotContain(sessionStorage, testKey, SESSION_STORAGE_ID);
-  }
-
-  private void openWebStoragePage() {
-    driver.findElement(By.linkText("Web storage")).click();
-  }
-
-  private void clickLocalStorageButton() {
-    driver.findElement(By.id("display-local")).click();
-  }
-
-  private void clickSessionStorageButton() {
-    driver.findElement(By.id("display-session")).click();
-  }
-
-  private void assertStorageContains(
-      Storage storage, String key, String expectedValue, String storageLocatorId) {
-    assertEquals(expectedValue, storage.getItem(key), "Хранилище не содержит ожидаемое значение!");
-    assertTrue(
-        driver
-            .findElement(By.id(storageLocatorId))
-            .getText()
-            .contains("\"" + key + "\":\"" + expectedValue + "\""),
-        storageLocatorId + " не отображается на странице!");
-  }
-
-  private void assertStorageDoesNotContain(Storage storage, String key, String storageLocatorId) {
-    assertNull(storage.getItem(key), "Элемент хранилища не был удален!");
-    assertFalse(
-        driver.findElement(By.id(storageLocatorId)).getText().contains(key),
-        storageLocatorId + " все еще отображается на странице!");
-  }
-
-  private void assertStorageIsEmpty(Storage storage, String storageLocatorId) {
-    assertNull(storage.getItem("anyKey"), storageLocatorId + " не должно содержать элементов!");
+    webStoragePage.clickSessionStorageButton();
     assertEquals(
-        "{}",
-        driver.findElement(By.id(storageLocatorId)).getText(),
-        storageLocatorId + " должно быть пустым на странице!");
+            WebStoragePage.DEFAULT_SESSION_STORAGE_VALUE_1,
+            webStoragePage.getSessionStorageItem(WebStoragePage.DEFAULT_SESSION_STORAGE_KEY_1),
+            "Session storage не содержит правильное значение для \"lastname\""
+    );
+    assertEquals(
+            WebStoragePage.DEFAULT_SESSION_STORAGE_VALUE_2,
+            webStoragePage.getSessionStorageItem(WebStoragePage.DEFAULT_SESSION_STORAGE_KEY_2),
+            "Session storage не содержит правильное значение для \"name\""
+    );
+  }
+
+  @Tag("KeyValueTest")
+  @Test
+  @DisplayName("Добавление в LocalStorage и проверка отображения и API")
+  void addLocalStorageTest() {
+
+    webStoragePage.addToLocalStorage(testKey, testValue);
+    webStoragePage.clickLocalStorageButton();
+
+
+    assertTrue(
+            webStoragePage.getLocalStorageText().contains("\"" + testKey + "\":\"" + testValue + "\""),
+            "Local storage не содержит добавленного значения!");
+
+
+    assertEquals(testValue, webStoragePage.getLocalStorageItem(testKey), "Local storage не содержит добавленного значения через API!");
+  }
+
+  @Tag("KeyValueTest")
+  @Test
+  @DisplayName("Удаление из LocalStorage и проверка отображения и API")
+  void removeLocalStorageTest() {
+
+    webStoragePage.addToLocalStorage(testKey, testValue);
+
+    webStoragePage.removeFromLocalStorage(testKey);
+    webStoragePage.clickLocalStorageButton();
+
+
+    assertFalse(
+            webStoragePage.getLocalStorageText().contains(testKey),
+            "Элемент в LocalStorage не был удален из UI!");
+
+
+    assertNull(webStoragePage.getLocalStorageItem(testKey), "Элемент в LocalStorage не был удален через API!");
+  }
+
+  @Tag("KeyValueTest")
+  @Test
+  @DisplayName("Добавление в SessionStorage и проверка отображения и API")
+  void addSessionStorageTest() {
+
+    webStoragePage.addToSessionStorage(testKey, testValue);
+    webStoragePage.clickSessionStorageButton();
+
+
+    assertTrue(
+            webStoragePage.getSessionStorageText().contains("\"" + testKey + "\":\"" + testValue + "\""),
+            "Session storage не содержит добавленного значения!");
+
+
+    assertEquals(testValue, webStoragePage.getSessionStorageItem(testKey), "Session storage не содержит добавленного значения через API!");
+  }
+
+  @Tag("KeyValueTest")
+  @Test
+  @DisplayName("Удаление из SessionStorage и проверка отображения и API")
+  void removeSessionStorageTest() {
+
+    webStoragePage.addToSessionStorage(testKey, testValue);
+
+    webStoragePage.removeFromSessionStorage(testKey);
+    webStoragePage.clickSessionStorageButton();
+
+
+    assertFalse(webStoragePage.getSessionStorageText().contains(testKey),"Элемент в SessionStorage не был удален из UI!");
+
+    assertNull(webStoragePage.getSessionStorageItem(testKey), "Элемент в SessionStorage не был удален через API!");
   }
 }
