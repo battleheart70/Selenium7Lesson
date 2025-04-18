@@ -1,30 +1,36 @@
 package Pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class IFramesPage extends BasePage {
-  private final By iFrame = By.id("my-iframe");
-  private final By paragraphElement = By.cssSelector("p.lead");
+
+  @FindBy(id = "my-iframe")
+  private WebElement iframe;
+
+  @FindBy(css = "p.lead")
+  private WebElement paragraphElement;
 
   public IFramesPage(WebDriver driver) {
     super(driver);
   }
 
-  @Step("Подождать пока p.lead станет доступен")
-  public WebElement getFirstParagraph() {
-    return getElementByLocator(paragraphElement);
-  }
-
-  @Step("Переключится на iFrame")
+  @Step("Переключиться на iFrame")
   public void switchToIframe() {
-    driver.switchTo().frame(getElementByLocator(iFrame));
+    wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iframe));
   }
 
-  @Step("Переключится в Default Content")
+  @Step("Переключиться обратно в основной контент")
   public void switchToDefaultContent() {
     driver.switchTo().defaultContent();
+  }
+
+  @Step("Получить первый параграф внутри iFrame")
+  public String getFirstParagraphText() {
+    wait.until(ExpectedConditions.visibilityOf(paragraphElement));
+    return paragraphElement.getText();
   }
 }

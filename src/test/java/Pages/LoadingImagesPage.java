@@ -1,57 +1,79 @@
 package Pages;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import io.qameta.allure.Step;
 import java.time.Duration;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import io.qameta.allure.Step;
+
 
 public class LoadingImagesPage extends BasePage {
 
-  public static final String DONE_TEXT = "Done!";
+  private static final String DONE_TEXT = "Done!";
 
-  private final By compassImage = By.id("compass");
-  private final By calendarImage = By.id("calendar");
-  private final By awardImage = By.id("award");
-  private final By landscapeImage = By.id("landscape");
-  private final By doneTextElement = By.id("text");
+  @FindBy(id = "compass")
+  private WebElement compassImage;
+
+  @FindBy(id = "calendar")
+  private WebElement calendarImage;
+
+  @FindBy(id = "award")
+  private WebElement awardImage;
+
+  @FindBy(id = "landscape")
+  private WebElement landscapeImage;
+
+  @FindBy(id = "text")
+  private WebElement doneTextElement;
 
   public LoadingImagesPage(WebDriver driver) {
     super(driver);
   }
 
   @Step("Ожидание завершения загрузки изображений")
-  public void waitForLoadComplete() {
-    wait.withTimeout(Duration.ofSeconds(10))
+  public LoadingImagesPage waitForLoadComplete() {
+    wait
+            .withTimeout(Duration.ofSeconds(10))
             .pollingEvery(Duration.ofMillis(500))
-            .until(ExpectedConditions.textToBe(doneTextElement, DONE_TEXT));
+            .until(ExpectedConditions.textToBePresentInElement(doneTextElement, DONE_TEXT));
+    return this;
   }
 
-  @Step("Проверка, что изображение с локатором {0} загружено и отображается корректно")
-  public boolean isCorrectImageLoaded(By imageLocator) {
-    WebElement image = driver.findElement(imageLocator);
+
+  private boolean isCorrectImageLoaded(WebElement image) {
+    wait.until(ExpectedConditions.visibilityOf(image));
     String src = image.getAttribute("src");
-    return image.isDisplayed() && src.contains(imageLocator.toString().split(":")[1].trim());
+    return image.isDisplayed() && src != null && !src.isEmpty();
   }
 
-  @Step("Получить локатор изображения компаса")
-  public By getCompassImage() {
-    return compassImage;
+  @Step("Проверить, что изображение 'compass' загружено корректно")
+  public LoadingImagesPage assertCompassImageLoaded() {
+    assertTrue(isCorrectImageLoaded(compassImage),
+            "Изображение 'compass' не загружено корректно.");
+    return this;
   }
 
-  @Step("Получить локатор изображения календаря")
-  public By getCalendarImage() {
-    return calendarImage;
+  @Step("Проверить, что изображение 'calendar' загружено корректно")
+  public LoadingImagesPage assertCalendarImageLoaded() {
+    assertTrue(isCorrectImageLoaded(calendarImage),
+            "Изображение 'calendar' не загружено корректно.");
+    return this;
   }
 
-  @Step("Получить локатор изображения награды")
-  public By getAwardImage() {
-    return awardImage;
+  @Step("Проверить, что изображение 'award' загружено корректно")
+  public LoadingImagesPage assertAwardImageLoaded() {
+    assertTrue(isCorrectImageLoaded(awardImage),
+            "Изображение 'award' не загружено корректно.");
+    return this;
   }
 
-  @Step("Получить локатор изображения пейзажа")
-  public By getLandscapeImage() {
-    return landscapeImage;
+  @Step("Проверить, что изображение 'landscape' загружено корректно")
+  public LoadingImagesPage assertLandscapeImageLoaded() {
+    assertTrue(isCorrectImageLoaded(landscapeImage),
+            "Изображение 'landscape' не загружено корректно.");
+    return this;
   }
 }

@@ -25,10 +25,8 @@ class IFramesTests extends BaseTest {
   @DisplayName("Открой страницу и проверь текст в iframe")
   void openIFramesGetText() {
     iFramesPage.switchToIframe();
-
-    WebElement firstParagraph = iFramesPage.getFirstParagraph();
     Assertions.assertTrue(
-        firstParagraph.getText().contains(LOREM_IPSUM),
+            iFramesPage.getFirstParagraphText().contains(LOREM_IPSUM),
         "Текст в iframe не содержит ожидаемого Lorem Ipsum.");
   }
 
@@ -38,17 +36,17 @@ class IFramesTests extends BaseTest {
 
     Assertions.assertThrows(
         TimeoutException.class,
-        () -> iFramesPage.getFirstParagraph(),
+        () -> iFramesPage.getFirstParagraphText(),
         "Параграф с текстом найден вне iframe, но он должен быть доступен только внутри iframe.");
 
     iFramesPage.switchToIframe();
     Assertions.assertDoesNotThrow(
-        () -> iFramesPage.getFirstParagraph(), "Параграф с текстом не найден внутри iframe.");
+        () -> iFramesPage.getFirstParagraphText(), "Параграф с текстом не найден внутри iframe.");
 
     iFramesPage.switchToDefaultContent();
     Assertions.assertThrows(
         TimeoutException.class,
-        () -> iFramesPage.getFirstParagraph(),
+        () -> iFramesPage.getFirstParagraphText(),
         "Параграф с текстом найден вне iframe после возврата в основной контент, но он должен быть доступен только внутри iframe.");
   }
 }

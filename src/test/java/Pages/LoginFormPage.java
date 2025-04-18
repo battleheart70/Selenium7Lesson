@@ -1,52 +1,70 @@
 package Pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginFormPage extends BasePage {
-  public static final String INVALID_LOGIN = "invalidLogin";
-  public static final String INVALID_PASSWORD = "invalidPassword";
 
-  private final By usernameInput = By.id("username");
-  private final By passwordInput = By.id("password");
-  private final By submitButton = By.cssSelector("button[type='submit']");
-  private final By dangerAlert = By.id("invalid");
-  private final By successAlert = By.id("success");
+  @FindBy(id = "username")
+  private WebElement usernameInput;
+
+  @FindBy(id = "password")
+  private WebElement passwordInput;
+
+  @FindBy(css = "button[type='submit']")
+  private WebElement submitButton;
+
+  @FindBy(id = "invalid")
+  private WebElement dangerAlert;
+
+  @FindBy(id = "success")
+  private WebElement successAlert;
 
   public LoginFormPage(WebDriver driver) {
     super(driver);
   }
 
-  @Step("Заполнить поле с именем пользователя '{username}'")
-  public void populateUsername(String username) {
-    driver.findElement(usernameInput).sendKeys(username);
+  @Step("Заполнить username: {username}")
+  public LoginFormPage username(String username) {
+    wait.until(ExpectedConditions.visibilityOf(usernameInput)).clear();
+    usernameInput.sendKeys(username);
+    return this;
   }
 
-  @Step("Заполнить поле с паролем '{password}'")
-  public void populatePassword(String password) {
-    driver.findElement(passwordInput).sendKeys(password);
+  @Step("Заполнить password: {password}")
+  public LoginFormPage password(String password) {
+    wait.until(ExpectedConditions.visibilityOf(passwordInput)).clear();
+    passwordInput.sendKeys(password);
+    return this;
   }
 
-  @Step("Нажать кнопку отправки формы")
-  public void pressSubmitButton() {
-    driver.findElement(submitButton).click();
+  @Step("Нажать Submit")
+  public LoginFormPage submit() {
+    wait.until(ExpectedConditions.elementToBeClickable(submitButton)).click();
+    return this;
   }
 
-  @Step("Войти с логином '{login}' и паролем '{password}'")
-  public void loginWithCredentials(String login, String password) {
-    populateUsername(login);
-    populatePassword(password);
-    pressSubmitButton();
+  @Step("Логин с {username} и {password}")
+  public LoginFormPage loginWith(String username, String password) {
+    return username(username).password(password).submit();
   }
 
-  @Step("Получить текст сообщения об ошибке: '{dangerAlert}'")
-  public String getDangerAlertText() {
-    return getElementByLocator(dangerAlert).getText();
+  @Step("Проверить сообщение об успехе: {expected}")
+  public LoginFormPage assertSuccess(String expected) {
+    String actual = wait.until(ExpectedConditions.visibilityOf(successAlert)).getText();
+    assertEquals(expected, actual, "Текст success alert не совпадает");
+    return this;
   }
 
-  @Step("Получить текст сообщения об успешном входе: '{successAlert}'")
-  public String getSuccessAlertText() {
-    return getElementByLocator(successAlert).getText();
+  @Step("Проверить сообщение об ошибке: {expected}")
+  public LoginFormPage assertDanger(String expected) {
+    String actual = wait.until(ExpectedConditions.visibilityOf(dangerAlert)).getText();
+    assertEquals(expected, actual, "Текст danger alert не совпадает");
+    return this;
   }
 }

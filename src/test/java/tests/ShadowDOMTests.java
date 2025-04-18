@@ -1,22 +1,20 @@
 package tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import Pages.HomePage;
 import Pages.ShadowDOMPage;
 import io.qameta.allure.Epic;
-import io.qameta.allure.Step;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 @Epic("Shadow DOM Tests")
 class ShadowDOMTests extends BaseTest {
   private ShadowDOMPage shadowDOMPage;
 
-  @Override
   @BeforeEach
   void prepare() {
     super.prepare();
@@ -26,14 +24,17 @@ class ShadowDOMTests extends BaseTest {
   @Test
   @DisplayName("Shadow DOM Тест")
   void shadowDOMTest() {
-    WebElement shadowElement = shadowDOMPage.getParagraphInsideShadowRoot();
-    assertEquals("Hello Shadow DOM", shadowElement.getText(), "Текст внутри Shadow DOM неверен!");
+    String textInside = shadowDOMPage.getParagraphInsideShadowRootText();
+    assertEquals("Hello Shadow DOM", textInside, "Текст внутри Shadow DOM неверен!");
   }
 
   @Test
   @DisplayName("Исключение при отсутствии getShadowRoot()")
   void shadowDOMThrowsExceptionTest() {
-    Assertions.assertThrows(
-        NoSuchElementException.class, () -> shadowDOMPage.getParagraphOutsideShadowRoot());
+    assertThrows(
+            NoSuchElementException.class,
+            () -> shadowDOMPage.getParagraphOutsideShadowRootText(),
+            "Ожидается исключение при попытке получить элемент вне Shadow DOM"
+    );
   }
 }

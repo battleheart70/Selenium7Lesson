@@ -1,59 +1,70 @@
 package Pages;
 
+import components.FooterComponent;
+import components.HeaderComponent;
 import config.TestPropertiesConfig;
 import io.qameta.allure.Step;
-import java.time.Duration;
 import org.aeonbits.owner.ConfigFactory;
 import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
 
 public class BasePage {
   protected WebDriver driver;
   protected WebDriverWait wait;
   protected TestPropertiesConfig config =
-      ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
+          ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
 
-  public static final String PAGE_TITLE = "Hands-On Selenium WebDriver with Java";
-  public static final String BROWSER_TITLE = "Hands-On Selenium WebDriver with Java";
-  public static final String FOOTER_TEXT = "Copyright © 2021-2025";
+  protected HeaderComponent header;
+  protected FooterComponent footer;
 
-
-  private final By title = By.cssSelector("h1.display-4");
-  private final By footer = By.cssSelector("footer.footer");
-  private final By footerText = By.cssSelector("span.text-muted");
+  @FindBy(css = "h1.display-4")
+  private WebElement pageTitle;
 
   public BasePage(WebDriver driver) {
     this.driver = driver;
     this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    PageFactory.initElements(driver, this);
+    this.header = new HeaderComponent(driver);
+    this.footer = new FooterComponent(driver);
   }
 
-  @Step("Получить текст Заголовка на самой странице")
+  @Step("Получить текст заголовка на странице")
   public String getPageTitle() {
-    return getElementByLocator(title).getText();
+    wait.until(ExpectedConditions.visibilityOf(pageTitle));
+    return pageTitle.getText();
   }
 
-  @Step("Получить заголовок страницы(отображаемый на вкладке браузера)")
+  @Step("Получить заголовок страницы (title в браузере)")
   public String getTitle() {
     return driver.getTitle();
   }
 
-  @Step("Получить элемент по локатору '{locator}' (с ожиданием)")
-  public WebElement getElementByLocator(By locator) {
-    return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+  @Step("Получить URL страницы")
+  public String getCurrentUrl() {
+    return driver.getCurrentUrl();
   }
 
-  @Step("Получить Alert по локатору '{locator}'")
-  public Alert getAlert(By locator) {
-    getElementByLocator(locator).click();
+  @Step("Перейти в header")
+  public HeaderComponent header() {
+    return header;
+  }
+
+  @Step("Перейти в footer")
+  public FooterComponent footer() {
+    return footer;
+  }
+
+  @Step("Кликнуть по элементу и получить Alert")
+  public Alert clickAndGetAlert(WebElement element) {
+    wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     return driver.switchTo().alert();
-  }
-
-  @Step("Получить footer и вернуть его текст")
-  public String getFooterText() {
-    return getElementByLocator(footer).findElement(footerText).getText();
   }
 }

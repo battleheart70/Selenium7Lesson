@@ -1,41 +1,53 @@
 package Pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.html5.Storage;
 import org.openqa.selenium.html5.WebStorage;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 
 public class WebStoragePage extends BasePage {
-  private WebStorage webStorage;
-  private Storage localStorage;
-  private Storage sessionStorage;
 
-  By localStorageButton = By.id("display-local");
-  By sessionStorageButton = By.id("display-session");
-  By localStorageText = By.id("local-storage");
-  By sessionStorageText = By.id("session-storage");
+  private final WebStorage webStorage;
+  private final Storage localStorage;
+  private final Storage sessionStorage;
 
-  public static final String DEFAULT_SESSION_STORAGE_KEY_1 = "lastname";
+  @FindBy(id = "display-local")
+  private WebElement localStorageButton;
+
+  @FindBy(id = "display-session")
+  private WebElement sessionStorageButton;
+
+  @FindBy(id = "local-storage")
+  private WebElement localStorageText;
+
+  @FindBy(id = "session-storage")
+  private WebElement sessionStorageText;
+
+  public static final String DEFAULT_SESSION_STORAGE_KEY_1   = "lastname";
   public static final String DEFAULT_SESSION_STORAGE_VALUE_1 = "Doe";
-  public static final String DEFAULT_SESSION_STORAGE_KEY_2 = "name";
+  public static final String DEFAULT_SESSION_STORAGE_KEY_2   = "name";
   public static final String DEFAULT_SESSION_STORAGE_VALUE_2 = "John";
 
   public WebStoragePage(WebDriver driver) {
     super(driver);
-    this.webStorage = (WebStorage) driver;
-    this.localStorage = webStorage.getLocalStorage();
+    this.webStorage     = (WebStorage) driver;
+    this.localStorage   = webStorage.getLocalStorage();
     this.sessionStorage = webStorage.getSessionStorage();
   }
 
   @Step("Кликнуть на кнопку Local Storage на UI")
   public void clickLocalStorageButton() {
-    getElementByLocator(localStorageButton).click();
+    wait.until(ExpectedConditions.elementToBeClickable(localStorageButton)).click();
   }
 
   @Step("Кликнуть на кнопку Session Storage на UI")
   public void clickSessionStorageButton() {
-    getElementByLocator(sessionStorageButton).click();
+    wait.until(ExpectedConditions.elementToBeClickable(sessionStorageButton)).click();
   }
 
   @Step("Вернуть LocalStorage Item по ключу: {key}")
@@ -50,13 +62,12 @@ public class WebStoragePage extends BasePage {
 
   @Step("Текст Local Storage на UI")
   public String getLocalStorageText() {
-
-    return getElementByLocator(localStorageText).getText();
+    return wait.until(ExpectedConditions.visibilityOf(localStorageText)).getText();
   }
 
   @Step("Текст Session Storage на UI")
   public String getSessionStorageText() {
-    return getElementByLocator(sessionStorageText).getText();
+    return wait.until(ExpectedConditions.visibilityOf(sessionStorageText)).getText();
   }
 
   @Step("Добавить в Local Storage по ключу: {key} и значению: {value}")

@@ -3,12 +3,15 @@ package tests;
 import Pages.HomePage;
 import Pages.LoginFormPage;
 import io.qameta.allure.Epic;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import patterns.builder.Credentials;
 
 @Epic("Login Form Tests")
 class LoginFormTest extends BaseTest {
 
-  LoginFormPage loginFormPage;
+  private LoginFormPage loginFormPage;
 
   @Override
   @BeforeEach
@@ -18,16 +21,54 @@ class LoginFormTest extends BaseTest {
   }
 
   @Test
-  @DisplayName("Удачный логин")
+  @DisplayName("Правильные креды")
   void successLoginTest() {
-    loginFormPage.loginWithCredentials(config.getUsername(), config.getPassword());
-    Assertions.assertEquals("Login successful", loginFormPage.getSuccessAlertText());
+    Credentials creds = Credentials.builder()
+            .username(config.getUsername())
+            .password(config.getPassword())
+            .build();
+
+    loginFormPage
+            .loginWith(creds.getUsername(), creds.getPassword())
+            .assertSuccess("Login successful");
   }
 
   @Test
-  @DisplayName("Логин с неправильными данными")
-  void invalidCredentialsTest() {
-    loginFormPage.loginWithCredentials(LoginFormPage.INVALID_LOGIN, LoginFormPage.INVALID_PASSWORD);
-    Assertions.assertEquals("Invalid credentials", loginFormPage.getDangerAlertText());
+  @DisplayName("Правильный логин, неправильный пароль")
+  void wrongPasswordTest() {
+    Credentials creds = Credentials.builder()
+            .username(config.getUsername())
+            .password("wrongPassword")
+            .build();
+
+    loginFormPage
+            .loginWith(creds.getUsername(), creds.getPassword())
+            .assertDanger("Invalid credentials");
+  }
+
+  @Test
+  @DisplayName("Неправильный логин, правильный пароль")
+  void wrongLoginTest() {
+    Credentials creds = Credentials.builder()
+            .username("wrongUser")
+            .password(config.getPassword())
+            .build();
+
+    loginFormPage
+            .loginWith(creds.getUsername(), creds.getPassword())
+            .assertDanger("Invalid credentials");
+  }
+
+  @Test
+  @DisplayName("Неправильный логин и неправильный пароль")
+  void wrongLoginAndPasswordTest() {
+    Credentials creds = Credentials.builder()
+            .username("wrongUser")
+            .password("wrongPassword")
+            .build();
+
+    loginFormPage
+            .loginWith(creds.getUsername(), creds.getPassword())
+            .assertDanger("Invalid credentials");
   }
 }

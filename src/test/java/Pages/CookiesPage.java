@@ -1,86 +1,110 @@
 package Pages;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CookiesPage extends BasePage {
 
-  public static final int DEFAULT_COOKIES_SIZE = 2;
-  public static final Cookie DEFAULT_DATE_COOKIES = new Cookie("date", "10/07/2018");
+  public static final int DEFAULT_COOKIES_SIZE       = 2;
+  public static final Cookie DEFAULT_DATE_COOKIES    = new Cookie("date", "10/07/2018");
   public static final Cookie DEFAULT_USERNAME_COOKIES = new Cookie("username", "John Doe");
 
-  private final By refreshButton = By.id("refresh-cookies");
-  private final By cookiesList = By.id("cookies-list");
+  @FindBy(id = "refresh-cookies")
+  private WebElement refreshButton;
+
+  @FindBy(id = "cookies-list")
+  private WebElement cookiesList;
 
   public CookiesPage(WebDriver driver) {
     super(driver);
+    PageFactory.initElements(driver, this);
   }
 
-  @Step("Нажать кнопку обновления списка cookies на UI")
-  public void pressRefreshCookiesButton() {
-    getElementByLocator(refreshButton).click();
+  @Step("Обновить список cookies на UI")
+  public CookiesPage refresh() {
+    wait.until(ExpectedConditions.elementToBeClickable(refreshButton)).click();
+    return this;
   }
 
-  @Step("Получить текст элемента в котором на UI перечислены cookies")
-  public String getCookiesTextOnPage() {
-    WebElement cookiesListElement = getElementByLocator(cookiesList);
-    return cookiesListElement.getText();
-  }
-
-  @Step("Проверить наличие cookie с именем '{name}' и значением '{value}'")
-  public void assertCookieExists(String name, String value) {
-    assertTrue(getCookiesTextOnPage().contains(name + "=" + value), "Cookie отсутствует!");
-    Cookie cookieOnPage = driver.manage().getCookieNamed(name);
-    assertNotNull(cookieOnPage, "Cookie не найден");
-    assertEquals(value, cookieOnPage.getValue());
-  }
-
-  @Step("Проверить наличие cookie: {cookie}")
-  public void assertCookieExists(Cookie cookie) {
-    assertTrue(
-        getCookiesTextOnPage().contains(cookie.getName() + "=" + cookie.getValue()),
-        "Cookie отсутствует!");
-    Cookie cookieOnPage = driver.manage().getCookieNamed(cookie.getName());
-    assertNotNull(cookieOnPage, "Cookie не найден");
-    assertEquals(cookie.getValue(), cookieOnPage.getValue());
-  }
-
-  @Step("Добавить cookie: ключ '{key}' со значением '{value}'")
-  public void addCookie(String key, String value) {
+  @Step("Добавить cookie: '{key}={value}'")
+  public CookiesPage addCookie(String key, String value) {
     driver.manage().addCookie(new Cookie(key, value));
-    pressRefreshCookiesButton();
+    return refresh();
   }
 
-  @Step("Удалить cookie с ключом '{key}'")
-  public void deleteCookie(String key) {
+  @Step("Удалить cookie: '{key}'")
+  public CookiesPage deleteCookie(String key) {
     driver.manage().deleteCookieNamed(key);
-    pressRefreshCookiesButton();
+    return refresh();
   }
 
-  @Step("Проверить удаление cookie: {cookie}")
-  public void assertCookieWasDeleted(Cookie cookie) {
-    assertFalse(
-        getCookiesTextOnPage().contains(cookie.getName() + "=" + cookie.getValue()),
-        "Cookie не удален");
+  @Step("Проверить, что UI содержит cookie '{name}={value}'")
+  public CookiesPage verifyUiContains(String name, String value) {
+    String expected = name + "=" + value;
+    String actual = wait.until(ExpectedConditions.visibilityOf(cookiesList)).getText();
+    assertTrue(actual.contains(expected),
+            () -> "Ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
+    return this;
+  }
+
+  @Step("Проверить, что UI не содержит cookie '{name}={value}'")
+  public CookiesPage verifyUiDoesNotContain(String name, String value) {
+    String expected = name + "=" + value;
+    String actual = wait.until(ExpectedConditions.visibilityOf(cookiesList)).getText();
+    assertFalse(actual.contains(expected),
+            () -> "Не ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
+    return this;
+  }
+
+  @Step("Проверить, что браузер содержит cookie '{name}' со значением '{value}'")
+  public CookiesPage verifyBrowserCookie(String name, String value) {
+    Cookie cookie = driver.manage().getCookieNamed(name);
+    assertAll("Проверка cookie в браузере",
+            () -> assertNotNull(cookie,   () -> "Cookie '" + name + "' не найдена в браузере"),
+            () -> assertEquals(
+                    value,
+                    cookie.getValue(),
+                    () -> "Ожидали для '" + name + "' значение \"" + value +
+                            "\", но было \"" + (cookie != null ? cookie.getValue() : "null") + "\""
+            )
+    );
+    return this;
   }
 
   @Step("Проверить увеличение количества cookies на 1")
-  public void assertCookiesNumberIncreased() {
-    assertEquals(DEFAULT_COOKIES_SIZE + 1, driver.manage().getCookies().size());
+  public CookiesPage checkNumberIncreased() {
+    assertEquals(
+            DEFAULT_COOKIES_SIZE + 1,
+            driver.manage().getCookies().size(),
+            "Количество cookies не увеличилось на 1"
+    );
+    return this;
   }
 
   @Step("Проверить уменьшение количества cookies на 1")
-  public void assertCookiesNumberDecreased() {
-    assertEquals(DEFAULT_COOKIES_SIZE - 1, driver.manage().getCookies().size());
+  public CookiesPage checkNumberDecreased() {
+    assertEquals(
+            DEFAULT_COOKIES_SIZE - 1,
+            driver.manage().getCookies().size(),
+            "Количество cookies не уменьшилось на 1"
+    );
+    return this;
   }
 
   @Step("Проверить дефолтное количество cookies")
-  public void assertCookiesNumberDefault() {
-    assertEquals(DEFAULT_COOKIES_SIZE, driver.manage().getCookies().size());
+  public CookiesPage checkDefaultNumber() {
+    assertEquals(
+            DEFAULT_COOKIES_SIZE,
+            driver.manage().getCookies().size(),
+            "Количество cookies не соответствует дефолтному"
+    );
+    return this;
   }
 }

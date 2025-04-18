@@ -1,39 +1,36 @@
 package tests;
 
-import static Pages.LoadingImagesPage.*;
-
 import Pages.HomePage;
 import Pages.LoadingImagesPage;
 import io.qameta.allure.Epic;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Epic("Loading images tests")
 class LoadingImagesTest extends BaseTest {
-  LoadingImagesPage loadingImagesPage;
 
   @Override
   @BeforeEach
   void prepare() {
     super.prepare();
-    loadingImagesPage = new HomePage(driver).openLoadingImagesPage();
   }
 
   @Test
-  @DisplayName("Открыть страницу и подождать пока все картинки загрузятся")
-  void loadingImagesTest() {
-    loadingImagesPage.waitForLoadComplete();
+  @DisplayName("Открыть страницу и подождать пока все картинки загрузятся (soft assertions)")
+  void loadingImagesSoftAssertTest() {
+    LoadingImagesPage page = new HomePage(driver)
+            .openLoadingImagesPage()
+            .waitForLoadComplete();
 
-    Assertions.assertTrue(
-        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getCompassImage()),
-        "Изображение с id 'compass' не загружено корректно.");
-    Assertions.assertTrue(
-        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getCalendarImage()),
-        "Изображение с id 'calendar' не загружено корректно.");
-    Assertions.assertTrue(
-        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getAwardImage()),
-        "Изображение с id 'award' не загружено корректно.");
-    Assertions.assertTrue(
-        loadingImagesPage.isCorrectImageLoaded(loadingImagesPage.getLandscapeImage()),
-        "Изображение с id 'landscape' не загружено корректно.");
+
+    assertAll("Проверка загрузки всех изображений",
+            page::assertCompassImageLoaded,
+            page::assertCalendarImageLoaded,
+            page::assertAwardImageLoaded,
+            page::assertLandscapeImageLoaded
+    );
   }
 }
