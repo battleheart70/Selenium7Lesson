@@ -2,6 +2,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+src/test/resources/prod.properties
+src/test/resources/dev.properties
+src/test/resources/default.properties
+src/test/resources/test.properties
 
 
 ### IntelliJ IDEA ###
