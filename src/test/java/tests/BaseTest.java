@@ -10,6 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static patterns.WebDriverFactory.configProperties;
+import static patterns.WebDriverFactory.createWebDriver;
+
 class BaseTest {
   WebDriver driver;
   WebDriverWait wait;
@@ -18,10 +21,9 @@ class BaseTest {
 
   @BeforeEach
   void prepare() {
-    driver = new ChromeDriver();
+    driver = createWebDriver(configProperties.browser());
     wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    driver.manage().window().maximize();
     driver.get(config.getBaseUrl());
   }
 
