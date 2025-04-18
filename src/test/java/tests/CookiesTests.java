@@ -8,11 +8,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static org.example.Constants.DEFAULT_DATE_COOKIES;
+import static org.example.Constants.DEFAULT_USERNAME_COOKIES;
+
 @Epic("Cookies Tests")
 class CookiesTests extends BaseTest {
 
   private CookiesPage cookiesPage;
 
+  @Override
   @BeforeEach
   void prepare() {
     super.prepare();
@@ -36,8 +40,8 @@ class CookiesTests extends BaseTest {
   @Test
   @DisplayName("Удаление cookie и проверка отсутствия")
   void cookieDeleteTest() {
-    String key   = CookiesPage.DEFAULT_USERNAME_COOKIES.getName();
-    String value = CookiesPage.DEFAULT_USERNAME_COOKIES.getValue();
+    String key   = DEFAULT_USERNAME_COOKIES.getName();
+    String value = DEFAULT_USERNAME_COOKIES.getValue();
 
     cookiesPage
             .deleteCookie(key)
@@ -51,20 +55,20 @@ class CookiesTests extends BaseTest {
     cookiesPage
             .refresh()
             .verifyUiContains(
-                    CookiesPage.DEFAULT_USERNAME_COOKIES.getName(),
-                    CookiesPage.DEFAULT_USERNAME_COOKIES.getValue()
+                    DEFAULT_USERNAME_COOKIES.getName(),
+                    DEFAULT_USERNAME_COOKIES.getValue()
             )
             .verifyBrowserCookie(
-                    CookiesPage.DEFAULT_USERNAME_COOKIES.getName(),
-                    CookiesPage.DEFAULT_USERNAME_COOKIES.getValue()
+                    DEFAULT_USERNAME_COOKIES.getName(),
+                    DEFAULT_USERNAME_COOKIES.getValue()
             )
             .verifyUiContains(
-                    CookiesPage.DEFAULT_DATE_COOKIES.getName(),
-                    CookiesPage.DEFAULT_DATE_COOKIES.getValue()
+                    DEFAULT_DATE_COOKIES.getName(),
+                    DEFAULT_DATE_COOKIES.getValue()
             )
             .verifyBrowserCookie(
-                    CookiesPage.DEFAULT_DATE_COOKIES.getName(),
-                    CookiesPage.DEFAULT_DATE_COOKIES.getValue()
+                    DEFAULT_DATE_COOKIES.getName(),
+                    DEFAULT_DATE_COOKIES.getValue()
             )
             .checkDefaultNumber();
   }

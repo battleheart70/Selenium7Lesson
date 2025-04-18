@@ -19,8 +19,6 @@ import java.time.Duration;
 public class BasePage {
   protected WebDriver driver;
   protected WebDriverWait wait;
-  protected TestPropertiesConfig config =
-          ConfigFactory.create(TestPropertiesConfig.class, System.getProperties());
 
   protected HeaderComponent header;
   protected FooterComponent footer;

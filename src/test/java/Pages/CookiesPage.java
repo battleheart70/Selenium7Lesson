@@ -8,13 +8,10 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import static org.example.Constants.DEFAULT_COOKIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CookiesPage extends BasePage {
-
-  public static final int DEFAULT_COOKIES_SIZE       = 2;
-  public static final Cookie DEFAULT_DATE_COOKIES    = new Cookie("date", "10/07/2018");
-  public static final Cookie DEFAULT_USERNAME_COOKIES = new Cookie("username", "John Doe");
 
   @FindBy(id = "refresh-cookies")
   private WebElement refreshButton;
@@ -49,8 +46,9 @@ public class CookiesPage extends BasePage {
   public CookiesPage verifyUiContains(String name, String value) {
     String expected = name + "=" + value;
     String actual = wait.until(ExpectedConditions.visibilityOf(cookiesList)).getText();
-    assertTrue(actual.contains(expected),
-            () -> "Ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
+    assertTrue(
+        actual.contains(expected),
+        () -> "Ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
     return this;
   }
 
@@ -58,53 +56,57 @@ public class CookiesPage extends BasePage {
   public CookiesPage verifyUiDoesNotContain(String name, String value) {
     String expected = name + "=" + value;
     String actual = wait.until(ExpectedConditions.visibilityOf(cookiesList)).getText();
-    assertFalse(actual.contains(expected),
-            () -> "Не ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
+    assertFalse(
+        actual.contains(expected),
+        () -> "Не ожидали UI строку \"" + expected + "\", но получили \"" + actual + "\"");
     return this;
   }
 
   @Step("Проверить, что браузер содержит cookie '{name}' со значением '{value}'")
   public CookiesPage verifyBrowserCookie(String name, String value) {
     Cookie cookie = driver.manage().getCookieNamed(name);
-    assertAll("Проверка cookie в браузере",
-            () -> assertNotNull(cookie,   () -> "Cookie '" + name + "' не найдена в браузере"),
-            () -> assertEquals(
-                    value,
-                    cookie.getValue(),
-                    () -> "Ожидали для '" + name + "' значение \"" + value +
-                            "\", но было \"" + (cookie != null ? cookie.getValue() : "null") + "\""
-            )
-    );
+    assertAll(
+        "Проверка cookie в браузере",
+        () -> assertNotNull(cookie, () -> "Cookie '" + name + "' не найдена в браузере"),
+        () ->
+            assertEquals(
+                value,
+                cookie.getValue(),
+                () ->
+                    "Ожидали для '"
+                        + name
+                        + "' значение \""
+                        + value
+                        + "\", но было \""
+                        + (cookie != null ? cookie.getValue() : "null")
+                        + "\""));
     return this;
   }
 
   @Step("Проверить увеличение количества cookies на 1")
   public CookiesPage checkNumberIncreased() {
     assertEquals(
-            DEFAULT_COOKIES_SIZE + 1,
-            driver.manage().getCookies().size(),
-            "Количество cookies не увеличилось на 1"
-    );
+        DEFAULT_COOKIES_SIZE + 1,
+        driver.manage().getCookies().size(),
+        "Количество cookies не увеличилось на 1");
     return this;
   }
 
   @Step("Проверить уменьшение количества cookies на 1")
   public CookiesPage checkNumberDecreased() {
     assertEquals(
-            DEFAULT_COOKIES_SIZE - 1,
-            driver.manage().getCookies().size(),
-            "Количество cookies не уменьшилось на 1"
-    );
+        DEFAULT_COOKIES_SIZE - 1,
+        driver.manage().getCookies().size(),
+        "Количество cookies не уменьшилось на 1");
     return this;
   }
 
   @Step("Проверить дефолтное количество cookies")
   public CookiesPage checkDefaultNumber() {
     assertEquals(
-            DEFAULT_COOKIES_SIZE,
-            driver.manage().getCookies().size(),
-            "Количество cookies не соответствует дефолтному"
-    );
+        DEFAULT_COOKIES_SIZE,
+        driver.manage().getCookies().size(),
+        "Количество cookies не соответствует дефолтному");
     return this;
   }
 }

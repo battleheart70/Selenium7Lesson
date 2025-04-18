@@ -24,7 +24,7 @@ class WebStorageTests extends BaseTest {
   }
 
   @Test
-  @DisplayName("Проверка дефолтного Local Storage пуст")
+  @DisplayName("Проверка дефолтный Local Storage пуст")
   void defaultLocalStorageEmpty() {
     webStoragePage.clickLocalStorageButton();
     assertNull(webStoragePage.getLocalStorageItem(testKey), "Local storage должно быть пустым!");

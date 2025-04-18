@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class FooterComponent {
-    private WebDriver driver;
+    private final WebDriver driver;
     private WebDriverWait wait;
 
     @FindBy(css = "footer.footer")

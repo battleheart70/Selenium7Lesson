@@ -23,8 +23,8 @@ public interface TestPropertiesConfig extends Config {
   @Key("password")
   String getPassword();
 
-  @Key("browser")
   @DefaultValue("chrome")
+  @Key("browser")
   String browser();
 
   @Key("remoteURl")
